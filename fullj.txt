@@ -1,0 +1,410 @@
+
+
+Installing DHCP server in Ubuntu 16.04
+ 
+Practical 1
+ 
+
+Steps to configure DHCP Server, Configure NFS Server to share directories on your network, Configure NFS Client (Ubuntu and Windows OS)
+Step1: In your Ubuntu 16.04, open up a terminal and input the following command to install dhcp server.
+sudo apt-get install isc-dhcp-server
+
+
+Step2: Once the installation has been done, make sure the network settings of your virtual machine are setto bridged network.
+Step3: In the terminal, type inconfig to verify as to weather an ip address has been assigned to your virtual machine.
+ 
+Step4: Next we need to configure our installed dhcp server to it serve ip address to connecting clients. Follows the following configuration.
+
+Step5: Look for the section which says "A slightly different configuration for internal subnel".
+
+Step6: Now start by config the subnet line. Set the first ip address to the start of your network range.(The ip address you received in the output of ifconfig be use dto calculated it. Here the ip address was 192.168.0.10 and hence network ip is 192.168.0.0).
+Step7: Set the net mask to 255.255.255.0 (This can be done by pressing ctrl+\ which will open a replace prompt wher you will have to type the original net mask which here was 255.255.255.224 and press enter the it will ask what it should be replaced with, then type 255.255.255.0, then press enter).
+
+Step8: In range set a range of ip address you would like server to serve. Here it is set to server 20 addresses ranging from 10.5.5.10 to 10.5.5.30 (For changing the range do the same by replacing the whole range section by typing "range 10.5.5.10 10.5.5.30" in replace it with prompt)
+Note: The range for me was 10.5.5.26 10.5.5.30, for your pc/system it might be differnt so change accordingly.
+ 
+Step9: Configure the routes line to be the default gateway.
+Step10: Save the file by exiting it "ctrl+X", then in the prompt enter y and press enter or just press enter.
+Step11: Now we have installed and configures our dhcp server. Let's start our dhcp server by using the following command.
+sudo /etc/init.d/isc-dhcp-server start
+
+Step12: To cross verify that help the ip address is actually served from the dhcp server go back to Ubuntu where the dhcp server has been configured and type in
+cat /var/lib/dhcp/dhcpd.leases
+
+
+
+
+
+
+
+
+
+
+
+ 
+Practical 2
+
+Aim :- Configure NFS Server to share the directories on your Network Configure NFS Server on your machine.
+We skipped it become its not necessary and the first 3 commands are same as of the execution on Ubuntu machine.
+Configure NFS Server on your Ubuntu.
+
+Step 1: Install the NFS server on your Ubuntu 16.04 using the following command.
+
+sudo apt-get install nfs-kernel-server
+
+Step 2: Once the installation is done we have to change the domain name of our domain which will be as same as of our root machine.
+to change the domain name we will use the following command to get into that file.
+sudo nano /etc/idmapd.conf
+
+After pressing enter you will uncomment the line which says #Domain=localdomain and edit the domain name.
+Here is how you edit this vi/vim file.
+Press 'i' so that you could go into insert mode after that if you use are A,B,C,D will get inserted but to avoid that we will press delete after pressing the up arrow, then locate to the line #Domain = localdomain, uncomment it by using del and also change the name by deleting the default name (which has to be done by delete) and then rename it to 'srv,.world'
+ 
+After renaming the domain press 'esc'to get back into command line form and to save and exit press ":" then type "wq!" and press enter to exit. (:+ wq! + enter)
+
+
+Be careful while you do these steps because one mistake and you might curropt your idmapd.conf file.
+
+Step 3: Now open the exports file to check if it's there or not. It is basically a list for file systems which might be exported via our NFS server.
+sudo nano /etc/exports
+
+ 
+Step 4: Now restart the NFS server you've installed in your Ubuntu at the start of this practical using the following command .
+systemctl restart nfs-server
+
+
+Step 5: In this step we will mount our nfs server into our home directory using the following command.
+mount -t nfsdlp.srv.world:/home/home
+
+Step 6: In this step we will display the information mounted by our NFS server, the 'df' command is used to display the information about total space and available space on a file system.
+
+Step 7: In this steop we will configure the mounting on fstab to mount it when the system boot.
+
+ 
+Step 8: Now we will install our auto mounting fstab using the following command.
+sudo apt-get install autofs
+
+
+Step 9: After getting done with the installation we have to open and check whether the auto.master file was created or not. This will be done by uising the following command.
+sudo nano /etc/auto.master
+
+Step 10: After checking the auto.master file we will need to create a directory(file) in which be adding mounted data.
+sudo mkdir /mnkdir
+
+After creating this directory we can find this directory in files,computer section.
+Step 11: Now after making the directory we will restart the auto mounting fstab, using the following command.
+systemctl restart autofs
+
+Step 12: Now we have to mount the data, before doing that we will need to change the current directory we are in to the directory we made for data mounting purpose (mntdir). For changing directory we will use "cd'
+
+cd/mntdir
+
+ 
+Step 13: We have to mount the data into mntdir which we was mounted we installed the NFS and auto fstab in the mounts directory we will use grep command. it can be done as follows.
+cat/proc/mounts |grep mntdir
+
+Step 14- Make sure you start your systems NFS services, which can be done by going into the Control Panel>Programs>Turn Windows features on or off.
+There you will see Services for NFS just tick them both individually and thewn press ok.
+
+
+
+
+
+
+
+
+
+
+
+ 
+Practical 3
+
+Aim:- Intial settings .Add a user. Network Settings, change to static IP address, Disable IPv6 if not needed, Configure Services, during the list of services which are running, stop and turn OFF auto-start setting fora service if you don't need it, Sudo settings.
+Step 1: Add a User
+
+
+Step 2: Change to stack IP address
+
+To assign a static ip address to a Ubuntu system, you need to edit the etc/network/interfaces file.
+
+First you'll need to find out your system's static ip address which can be done by the ifconfig command.
+ 
+Now copy down the ip address and netmask from the output of ifcionfig command into a notepad, to find out the gateway ip address type the following command.
+ip r | grep default
+
+Copy them as follows in a notepad.
+
+Step 3: Now editing the static IP address, for that you’ll need the following command.
+
+sudo nano /etc/network/interfaces
+
+Write down the data about static ip you copied in notepad into the interfaces file as follows.
+ 
+Exit the file using ‘ctrl+x’ and then save the file.
+Step 4: Now after editing your static IP you should reboot your machine.
+
+Step 5: Now we will disable the IPv6 if not needed. That can be done using the following command.
+
+sudo /bin/su -c”echo ‘net.ipv6.conf.all.disable_ipv6=1’>>/etc/sysctl.conf”
+
+Step 6: We will check the status of IPv6 using the following command.
+
+sudo sysctl –p
+
+Step 7: Now to show the list of multicast address we will use the following command. ipmaddr .
+
+Step 8: Now we will display the list of services which are running and have been stopped. Which will be done using the following command.
+systemctl –t service
+ 
+Step 9: Now we will stop the apparmor service from the list of services which can be done by using the following command.
+systemctl stop apparmor
+
+
+Step 10: After stopping the apparmor service we will disable it using the following command.
+
+systemctl disable apparmor
+
+
+ 
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+Practical No. 4
+Aim: To configure NTP Server and configure NTP client Network timing.
+Steps to do so.....
+Step 1: Step 1 would be installing ntp server on our machine which can be done by the following command. (Also make sure your machine’s software are up to date).
+sudo apt-get install ntp
+
+
+Step 2: To configure ntp the ntp file is stored at ‘/etc/nano.conf’ and can be modified with any editor. The command for that would be as follows.
+sudo nano /etc/ntp.conf
+
+ 
+Step 3: After the configuration you will need to restart the ntp service which can be done by the ‘service ntp restart’ command.
+
+Step 4: Now we will show the NTP servers running on the host.
+ntpq –pn
+
+Step 5: Now we will check the time synchronization on our client (Ubuntu) machine for that you will need to install the ntpdate package first which can be done by following command.
+sudo apt-get install ntpdate
+
+Step 6: To check the time synchronization on our client machine use the following command.
+ntpdate ntp1.jst.mfeed.ad.jp
+
+ 
+Step 7: Now we will do synchronization on our Windows Client, for that you will need to go to control panel and then open “Date and timing” setting, move to the tab “Internet Time” and click change settings and then update it.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+Practical 5
+
+Aim: To Install and configure DNS server in Ubuntu.
+
+Step 1: Make sure your Ubuntu server is up-to-date, if not then use the update and upgrade command.
+
+sudo apt-get update sudo apt-get upgrade
+ 
+
+Step 2: After updating the system, run the following command to install BIND9 packages which are used to setup DNS server.
+sudo apt-get install bind9 bind9utils bind9
+ 
+Step 3: Configuring the caching name server, caching name server saves the DNS query results locally for a particular period of time. To configure caching name server, edit/etc/bind/named.conf.options file. Which will be done by the following command.
+sudo nano /etc/bind/named,conf.options
+
+Uncomment the following lines and then, add then,add your ISP or Google public DNS server IP addresses.
+Save and close the file.
+ 
+Step 4: Now restart the bind9 service to take effect the changes. This will be done by the following command.
+sudo systemctl restart bind9
+
+We have successfully installed the caching name server.
+
+ 
+Practical 6
+Aim :- Install Samba to share folders or files between Windows and Linux.
+STEPS'S TO INSTALL SAMBA AND SHARE FOLDER'S ANF FILE'S:
+Step1 : This is the basic step and should be performed every time, that is to update system repositories.
+sudo apt-get update sudo apt-get upgrade
+Step2: Now after updating system repositories next step is to install samba using command
+sudo apt-get install samba
+
+Step 3: Now you need to configure the shared folder so first thing you want to do is to edit the configuration file.
+sudo nano /etc/samba/smb.conf
+
+Now first things you want to check in this configuration file is: Go to GLobal Settings section in that file and check whether workgroup=WORKGROUP, here WORKGROUP is name of your workgroup windows.
+ 
+
+ 
+
+Next is go to authentication part of same configuration file and check whether security=user if this line is present no need to change, if this line is missing then type security=user and save file.
+
+Step4: Now we will make the directory and check if it's created or not.
+a)	sudo mkdir -p/srv/samba/share
+b)	cd/srv
+c)	ls
+ 
+d)	ls samba
+
+
+
+Step5: Once you have made the directories you need to change ownership so to do that we execute the following command.
+sudo chown nobody.nogroup /srv/samba/share
+
+Step6: Now we have to list hte files present the directory we created, so we will use the list long command but before that we will move into the directory.
+a)	cd/srv/samba
+b)	ll
+
+Step7: Now we will configure the nmbd file for samba, for that we will use the following command.
+sudo nano /etc/init/nmbd.conf
+
+Comment out all the lines in pre-start script except one line.
+ 
+Step 8: Now we will restart our nmbd and smbd services uding commands.
+sudo service smbd restart sudo service nmbd restart
+Step 9: Now create a file using touch command in /srv/samba/share named test.txt and we will check if our file is created or not.
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+Practical 7
+
+Aim:- To install SSH ( Secure Shell) server on you Ubuntu machine and configure it.
+
+Step1: It is always necessary to keep your machine up-to-date before you install any type of server or service in it.
+sudo apt-get update sudo apt-get upgrade
+Step 2: Now we have to install the SSH server, so we use the following command.
+
+sudo apt-get -y install openssh-server
+
+ 
+Step3: Now we have to configure the file SSH server which can be done by editing the 'sshd_config' file for that we have to use the following command.
+sudo nano /etc/ssh/sshd_config
+Here we have to edit the file and make a change in the authentication block "Permitrootlogin yes"
+
+
+
+Step4: Now we have to restart the ssh server which can be done by following command..
+sudo systemctl restart ssh
+
+Step5: In this step we install openssh-client server on our machine by using the following command.
+
+
+ 
+Step6: After installing all the necessary servers on your ubuntu machine Install Putty on your Windows client and open it put your ubuntu machine's ip address which can be know using ifconfig command.
+
+
+
+
+
+
+
+
+
+
+
+ 
+Practical 8
+
+Aim: To install MySQL server to configure database server and install phpMyAdmin to operate MySQL on web browser from clients.
+Step 1: First step would be to install MySQL server and configure it.
+
+sudo apt-get -y install mysql-server-5.7
+
+During installation it will ask you set he root users password which you will be using when you will be accessing the database. So set the password accordingly.
+
+ 
+Step 2: Once the MysSQL server installation is done you can connect to it by opening it.
+
+mysql -u root -p
+
+Step 3: Now we will display the user info and also the ip for our host by using the following command.
+
+select user,host from mysql.user;
+
+SHOW VARIABLES WHERE Variable_name='port';
+
+Enter the mysql promt using 'exit' command.
+ 
+Step 4: Now let's install phypMyAdmin so that we can operate MySQL on web browser from clients.
+
+sudo apt-get -y install phpmyadmin
+
+
+
+
+During installation you'll be asked which web server you want to configure to run phpMyAdmin. Select "apache2".
+ 
+After that you'll be asked that if you want dbconfig-common for your phpMyAdmin, select yes and proceed.
+ 
+
+ 
+
+Now set the password for phpmyadmin.
+
+
+
+Step 5: Now we have to edit the apache file and set the required ip for our server.
+
+sudo nano /etc/phpmyadmin/apache.conf
+
+Once you open the apache.conf file to get the line numbers type the command “: set number"
+ 
+
+ 
+
+Now add the required ip near the 8th line "Require ip 127.0.0.1 10.0.0.0/24". After adding this,save the file and exit.
+ 
+ 
+Step 6: Now restart the apache server which can be done using the folloing command.
+
+sudo /etc/init.d/apache2 restart
+
+Step 7: Open the browser on your ubuntu machine and type the following in the search bar. http://localhost:3036/phpmyadmin/
+Step 8: If the page opens type your root users name and password.
+
+
+
+
+
+
+
+
+
+
+
