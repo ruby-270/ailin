@@ -1,0 +1,506 @@
+PR 1 
+Code:‐ 
+graph={'oradea':[('zerind',46),('sibiu',137)], 
+       'zerind':[('oradea',46),('arad',43)], 
+       'sibiu':[('oradea',137),('arad',121),('rimniku vikea',54),('fagaras',98)], 
+       'arad':[('zerind', 43),('sibiu',121),('timisoara',82)], 
+       'rimniku vikea':[('sibiu',54),('craiova',124),('pitesti',97)], 
+       'fagaras':[('sibiu',98),('bucharest', 155)], 
+       'timisoara':[('arad',82),('lugoj',77)], 
+       'craiova':[('pitesti',104),('rimniku vikea',124),('dobrota',89)], 
+       'pitesti':[('rimniku vikes',97),('bucharest',90),('craiova',104)], 
+       'bucharest':[('fagaras',155),('pitesti',90),('giurgiu',62),('urziceni',61)], 
+       'lugoj':[('timisoara',77),('mehadia',40)], 
+       'dobreta':[('craiova', 89),('mehadia',40)], 
+       'giurgiu':[('bucharest',62)], 
+       'urziceni':[('bucharest',61),('vaslui',108),('hirsova',78)], 
+       'mehadia':[('lugoj',40),('dobreta',40)], 
+       'vaslui':[('urziceni',108),('lasi',72)], 
+       'hirsova':[('urziceni',78),('eforic',64)], 
+       'lasi':[('vaslui',72),('neant',74)], 
+       'eforic':[('hirsova',64)], 
+       'neant':[('lasi',74)] 
+       } 
+def bfs_connected_component(graph,start,goal): 
+    explored=[] 
+    queue=[start] 
+    cost=[0] 
+    weight=0 
+    if start==goal: 
+        return "Goal Found" 
+    while queue: 
+        node=queue.pop(0) 
+        a=cost.pop(0) 
+        if node not in explored: 
+            explored.append(node) 
+            weight +=a 
+            neighbours=graph[node] 
+            for neighbour in neighbours: 
+                if neighbour[0] not in explored: 
+                    if neighbour[0] not in queue: 
+                        queue.append(neighbour[0]) 
+                        cost.append(neighbour[1]) 
+            print(queue) 
+            print(cost) 
+        if node==goal: 
+            return(explored,weight) 
+    #return (explored,weight) 
+    return "Goal not found" 
+print(bfs_connected_component(graph,'arad','bucharest')) 
+
+
+
+
+
+
+
+
+
+pr2
+Code:‐ 
+graph={'oradea':[('zerind',46),('sibiu',137)], 
+       'zerind':[('oradea',46),('arad',43)], 
+       'sibiu':[('oradea',137),('arad',121),('rimniku vikea',54),('fagaras',98)], 
+       'arad':[('zerind', 43),('sibiu',121),('timisoara',82)], 
+       'rimniku vikea':[('sibiu',54),('craiova',124),('pitesti',97)], 
+       'fagaras':[('sibiu',98),('bucharest', 155)], 
+       'timisoara':[('arad',82),('lugoj',77)], 
+       'craiova':[('pitesti',104),('rimniku vikea',124),('dobrota',89)], 
+       'pitesti':[('rimniku vikes',97),('bucharest',90),('craiova',104)], 
+       'bucharest':[('fagaras',155),('pitesti',90),('giurgiu',62),('urziceni',61)], 
+       'lugoj':[('timisoara',77),('mehadia',40)], 
+       'dobreta':[('craiova', 89),('mehadia',40)], 
+       'giurgiu':[('bucharest',62)], 
+       'urziceni':[('bucharest',61),('vaslui',108),('hirsova',78)], 
+       'mehadia':[('lugoj',40),('dobreta',40)], 
+       'vaslui':[('urziceni',108),('lasi',72)], 
+       'hirsova':[('urziceni',78),('eforic',64)], 
+       'lasi':[('vaslui',72),('neant',74)], 
+       'eforic':[('hirsova',64)], 
+       'neant':[('lasi',74)] 
+       } 
+def bfs_connected_component(graph,start,goal): 
+    explored=[] 
+    queue=[start] 
+    cost=[0] 
+    weight=0 
+    if start==goal: 
+        return "Goal Found" 
+    while queue: 
+        node=queue.pop(0) 
+        a=cost.pop(0) 
+        if node not in explored: 
+            explored.append(node) 
+            weight +=a 
+            neighbours=graph[node] 
+            for neighbour in reversed(neighbours): 
+                if neighbour[0] not in explored: 
+                    if neighbour[0] not in queue: 
+                        queue.append(neighbour[0]) 
+                        cost.append(neighbour[1]) 
+            print(queue) 
+            print(cost) 
+        if node==goal: 
+            return(explored,weight) 
+    #return (explored,weight) 
+    return "Goal not found" 
+print(bfs_connected_component(graph,'arad','bucharest')) 
+ 
+
+
+
+
+
+
+ 
+pr3 
+Code:‐ 
+import queue as Q 
+dict_hn={'Arad':336,'Bucharest':0,'Craiova':160,'Drobeta':242,'Eforie'
+:161,'Fagaras':176,'Giurgiu':77,'Hirsova':151,'lasi':226,'Lugoj':244,'Me
+hadia':241,'Neamt':234, 
+         'Oradea':380,'Pitesti':100,'Rimnicu':193,'Sibiu':253,'Timisoara':3
+29,'Urziceni':80,'Vaslui':199,'Zerind':374} 
+dict_gn=dict( 
+Arad=dict(Zerind=75,Timisoara=118,Sibiu=140), 
+Bucharest=dict(Urziceni=85,Fagaras=211,Giurgiu=90,Pitesti=101),
+Craiova=dict(Drobeta=120,Rimnicu=146,Pitesti=138), 
+Drobeta=dict(Mehadia=75,Craiova=120), 
+Eforie=dict(Hirsova=86), 
+Fagaras=dict(Sibiu=99,Bucharest=211), 
+Giurgiu=dict(Bucharest=90), 
+Hirsova=dict(Urziceni=98,Eforie=86), 
+lasi=dict(Vaslui=92,Neamt=87), 
+Lugoj=dict(Timisoara=111,Mehadia=70), 
+Mehadia=dict(Lugoj=70,Drobeta=75), 
+Neamt=dict(lasi=87), 
+Oradea=dict(Zerind=71,Sibiu=51), 
+Pitesti=dict(Rimnicu=97,Craiova=138,Bucharest=101), 
+Rimnicu=dict(Sibiu=80,Pitesti=97,Craiova=146), 
+Sibiu=dict(Fagaras=99,Rimnicu=80,Oradea=151,Arad=140), 
+Timisoara=dict(Arad=118,Lugoj=111), 
+Urziceni=dict(Hirsova=98,Bucharest=85,Vaslui=142), 
+Vaslui=dict(lasi=92,Urziceni=142), 
+Zerind=dict(Arad=75,Oradea=71) 
+) 
+def get_fn(citystr): 
+    cities=citystr.split(',') 
+    hn=0 
+    gn=0 
+    ctr=0 
+    while ctr!=len(cities)‐1: 
+        gn=gn+dict_gn[cities[ctr]][cities[ctr+1]] 
+        ctr=ctr+1 
+    print('‐‐‐‐‐g(n) for',citystr,'is',gn) 
+    hn=dict_hn[cities[len(cities)‐1]] 
+    print('‐‐‐‐‐h(n) for',cities[len(cities)‐1],'is',hn) 
+    print('‐‐‐‐‐f(n) for',citystr,'is',(hn+gn)) 
+    print('‐‐‐‐‐‐') 
+    return(hn+gn) 
+def expand(mycities,cityq,goal): 
+    tot,citystr=mycities 
+    cities=citystr.split(',') 
+    city2expand=cities[len(cities)‐1] 
+    if city2expand==goal: 
+        ans='The A* path is '+citystr+'with the value as '+str(tot) 
+        while not cityq.empty(): 
+            cityq.get() 
+        return ans 
+    print('Expanded city‐‐‐‐‐‐‐‐‐',city2expand) 
+    for cty in dict_gn[city2expand]: 
+        cityq.put((get_fn(citystr+","+cty),citystr+","+cty)) 
+def main(): 
+    start='Arad' 
+    goal='Bucharest' 
+    cityq=Q.PriorityQueue() 
+    cityq.put((get_fn(start),start)) 
+    while not cityq.empty(): 
+        mycities=cityq.get() 
+        ans=expand(mycities,cityq,goal) 
+    print('########',ans) 
+main()
+
+
+
+
+
+
+ 
+PR4
+Code:‐ 
+import queue as Q 
+dict_hn={'Arad':336,'Bucharest':0,'Craiova':160,'Drobeta':242, 
+         'Eforie':161,'Fagaras':176,'Giurgiu':77,'Hirsova':151,'lasi':226, 
+         
+'Lugoj':244,'Mehadia':241,'Neamt':234,'Oradea':380,'Pitesti':100, 
+         'Rimnicu':193,'Sibiu':253,'Timisoara':329,'Urziceni':80, 
+         'Vaslui':199,'Zerind':374} 
+  
+dict_gn=dict( 
+Arad=dict(Zerind=75,Timisoara=118,Sibiu=140), 
+Bucharest=dict(Urziceni=85,Fagaras=211,Giurgiu=90,Pitesti=101),
+Craiova=dict(Drobeta=120,Rimnicu=146,Pitesti=138), 
+Drabbet=dict(Mehadia=75,Craiova=120), 
+Eforie=dict(Hirsova=86), 
+Fagaras=dict(Sibiu=99,Bucharest=211), 
+Giurgiu=dict(Bucharest=90), 
+Hirsova=dict(Urziceni=98,Eforie=86), 
+lasi=dict(Vaslui=92,Neamt=87), 
+Lugoj=dict(Timisoara=111,Mehadia=70), 
+Mehadia=dict(Lugoj=70,Drobeta=75), 
+Neamt=dict(lasi=87), 
+Oradea=dict(Zerind=71,Sibiu=151), 
+Pitesti=dict(Rimnicu=97,Craiova=138,Bucharest=101), 
+Rimnicu=dict(Sibiu=80,Pitesti=97,Craiova=146), 
+Sibiu=dict(Fagaras=99,Rimnicu=80,Oradea=151,Arad=140), 
+Timisoara=dict(Arad=118,Lugoj=111), 
+Urziceni=dict(Hirsova=98,Bucharest=85,Vaslui=142), 
+Vaslui=dict(lasi=92,urziceni=142), 
+Zerind=dict(Arad=75,Oradea=71) 
+) 
+  
+def get_fn(citystr): 
+    cities=citystr.split(',') 
+    hn=0 
+    gn=0 
+    ctr=0 
+    while ctr!=len(cities)‐1: 
+        gn=gn+dict_gn[cities[ctr]][cities[ctr+1]] 
+        ctr=ctr+1 
+    print('‐‐‐‐‐‐‐‐g(n)for',citystr,'is',gn) 
+    hn=dict_hn[cities[len(cities)‐1]] 
+    print('‐‐‐‐‐‐‐‐h(n)for',cities[len(cities)‐1],'is',hn) 
+    print('‐‐‐‐‐‐‐‐f(n)for',citystr,'is',(hn+gn)) 
+    print('‐‐‐‐‐‐‐‐') 
+    return(hn+gn) 
+  
+def expand(mycities,cityq,goal): 
+    tot,citystr=mycities 
+    cities=citystr.split(',') 
+    city2expand=cities[len(cities)‐1] 
+    if city2expand==goal: 
+        ans='The  Recursive  Best  First  Search  Path  is'+citystr+'with  the 
+value as'+str(tot) 
+        while not cityq.empty(): 
+            cityq.get() 
+        return ans 
+    print('Expanded city‐‐‐‐‐‐‐‐‐‐‐',city2expand) 
+    tempq=Q.PriorityQueue() 
+    for cty in dict_gn[city2expand]: 
+        tempq.put((get_fn(citystr+","+cty),citystr+","+cty)) 
+    print('First Best and Second Best Inserted in Priority Queue:') 
+    ctr=1 
+    if cityq.empty(): 
+        while not tempq.empty(): 
+            if ctr==1 or ctr==2: 
+                tempgn,tempcitystr=tempq.get() 
+                print('Inserting into CityQueue:',tempgn,',',tempcitystr) 
+                cityq.put((tempgn,tempcitystr)) 
+                ctr=ctr+1 
+            else: 
+                tempq.get() 
+    else: 
+        fn=0 
+        citystring='' 
+        fn=getSecondBest(cityq,fn,citystring) 
+        while not tempq.empty(): 
+            if ctr==1 or ctr==2: 
+                tempgn,tempcitystr=tempq.get() 
+                if tempgn>fn: 
+                    if ctr==1: 
+                        print('Inserting into CityQueue:',tempgn,',',citystr) 
+                        cityq.put((tempgn,citystr)) 
+                    ctr=3 
+                    continue 
+                else: 
+                    print('Inserting into CityQueue:',tempgn,',',tempcitystr) 
+                    cityq.put((tempgn,tempcitystr)) 
+                    ctr=ctr+1 
+            else: 
+                tempq.get() 
+        while not tempq.empty(): 
+            tempq.get() 
+  
+def getSecondBest(cityq,fn,citystring): 
+    fn,citystring=cityq.get() 
+    cityq.put((fn,citystring)) 
+    return fn 
+  
+def main(): 
+    start='Arad' 
+    goal='Bucharest' 
+    cityq=Q.PriorityQueue() 
+    cityq.put((get_fn(start),start)) 
+    while not cityq.empty(): 
+        mycities=cityq.get() 
+        ans=expand(mycities,cityq,goal) 
+    print('########',ans) 
+main()
+
+
+
+
+
+
+
+
+
+
+ 
+  PR 5
+Code:‐ 
+import pandas as pd 
+import numpy as np 
+from sklearn.preprocessing import LabelEncoder,StandardScaler 
+from sklearn.neural_network import MLPClassifier 
+from sklearn.feature_extraction import DictVectorizer 
+from sklearn import tree 
+import warnings 
+from sklearn.metrics import accuracy_score,classification_report 
+warnings.filterwarnings(action='ignore',category=DeprecationWarni
+ng) 
+data=pd.read_csv('data.csv') 
+cols_to_retain=['Alt','Bar','Fri','Hun','Pat','Price','Rain','Res','Type','Est
+'] 
+X_feature=data[cols_to_retain] 
+X_dict=X_feature.T.to_dict().values() 
+vect=DictVectorizer(sparse=False) 
+X_vector=vect.fit_transform(X_dict) 
+print(X_vector) 
+X_Train=X_vector[:‐1] 
+X_Test = X_vector[‐1:] 
+print('Train set') 
+print(X_Train) 
+print('test set') 
+print(X_Test) 
+le = LabelEncoder() 
+y_train = le.fit_transform(data['Goal'][:‐1]) 
+clf=tree.DecisionTreeClassifier(criterion='entropy') 
+clf=clf.fit(X_Train,y_train) 
+print('test data') 
+print(le.inverse_transform(clf.predict(X_Test))) 
+
+
+
+
+
+
+
+
+
+
+
+PR 6
+Code:‐ 
+import pandas as pd 
+import numpy as np 
+from sklearn.preprocessing import LabelEncoder,StandardScaler 
+from sklearn.neural_network import MLPClassifier 
+from sklearn.feature_extraction import DictVectorizer 
+from sklearn import tree 
+import warnings 
+from sklearn.metrics import accuracy_score,classification_report 
+  
+warnings.filterwarnings(action='ignore',category=DeprecationWarni
+ng) 
+  
+data=pd.read_csv('data.csv') 
+cols_to_retain=['Alt','Bar','Fri','Hun','Pat','Price','Rain','Res','Type','Est
+'] 
+  
+X_feature=data[cols_to_retain] 
+X_dict=X_feature.T.to_dict().values() 
+  
+vect=DictVectorizer(sparse=False) 
+X_vector=vect.fit_transform(X_dict) 
+print(X_vector) 
+  
+X_Train=X_vector[:‐1] 
+X_Test = X_vector[‐1:] 
+print('Train set') 
+print(X_Train) 
+print('test set') 
+print(X_Test) 
+  
+le = LabelEncoder() 
+y_train = le.fit_transform(data['Goal'][:‐1]) 
+  
+scaler = StandardScaler() 
+scaler.fit(X_Train) 
+X_train = scaler.transform(X_Train) 
+X_test = scaler.transform(X_Test) 
+  
+mlp = MLPClassifier(hidden_layer_sizes=(10,10,10),max_iter=1000) 
+mlp.fit(X_train,y_train) 
+print(le.inverse_transform(mlp.predict(X_test))) 
+  
+print("Weight between input and first hidden layer:") 
+print(mlp.coefs_[0]) 
+print("\nWeight between first hidden and second hidden layer:")
+
+
+
+
+
+
+
+
+
+
+
+
+PR 7 
+Code:‐ 
+import pandas as pd 
+import numpy as np 
+from sklearn.preprocessing import LabelEncoder,StandardScaler 
+from sklearn.neural_network import MLPClassifier 
+from sklearn.feature_extraction import DictVectorizer 
+from sklearn import tree 
+import warnings 
+from sklearn.metrics import accuracy_score,classification_report 
+from sklearn.ensemble import AdaBoostClassifier 
+  
+warnings.filterwarnings(action='ignore',category=DeprecationWarning) 
+  
+data=pd.read_csv('data.csv') 
+cols_to_retain=['Alt','Bar','Fri','Hun','Pat','Price','Rain','Res','Type','Est'] 
+  
+X_feature=data[cols_to_retain] 
+X_dict=X_feature.T.to_dict().values() 
+  
+vect=DictVectorizer(sparse=False) 
+X_vector=vect.fit_transform(X_dict) 
+print(X_vector) 
+  
+X_Train=X_vector[:‐1] 
+X_Test = X_vector[‐1:] 
+print('Train set') 
+print(X_Train) 
+print('test set') 
+print(X_Test) 
+  
+le = LabelEncoder() 
+y_train = le.fit_transform(data['Goal'][:‐1]) 
+  
+scaler = StandardScaler() 
+scaler.fit(X_Train) 
+X_train = scaler.transform(X_Train) 
+X_test = scaler.transform(X_Test) 
+  
+model =AdaBoostClassifier(random_state=1) 
+model.fit(X_train,y_train) 
+print(le.inverse_transform(model.predict(X_test))) 
+
+
+
+
+
+
+
+
+
+
+PR 8 
+Code:‐ 
+import pandas as pd 
+import numpy as np 
+from sklearn.preprocessing import LabelEncoder,StandardScaler 
+from sklearn.neural_network import MLPClassifier 
+from sklearn.feature_extraction import DictVectorizer 
+from sklearn import tree 
+import warnings 
+from sklearn.metrics import accuracy_score,classification_report 
+from sklearn.naive_bayes import GaussianNB 
+  
+warnings.filterwarnings(action='ignore',category=DeprecationWarning) 
+  
+data=pd.read_csv('data.csv') 
+cols_to_retain=['Alt','Bar','Fri','Hun','Pat','Price','Rain','Res','Type','Est'] 
+  
+X_feature=data[cols_to_retain] 
+X_dict=X_feature.T.to_dict().values() 
+  
+vect=DictVectorizer(sparse=False) 
+X_vector=vect.fit_transform(X_dict) 
+print(X_vector) 
+  
+X_Train=X_vector[:‐1] 
+X_Test = X_vector[‐1:] 
+print('Train set') 
+print(X_Train) 
+print('test set') 
+print(X_Test) 
+  
+le = LabelEncoder() 
+y_train = le.fit_transform(data['Goal'][:‐1]) 
+  
+scaler = StandardScaler() 
+scaler.fit(X_Train) 
+X_train = scaler.transform(X_Train) 
+X_test = scaler.transform(X_Test) 
+  
+model=GaussianNB() 
+model.fit(X_train,y_train) 
+print(le.inverse_transform(model.predict(X_test))) 
+  
